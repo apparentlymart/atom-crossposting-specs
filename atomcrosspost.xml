@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="3"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="yes"?>
+<rfc category="exp" docName="draft-atom-crosspost-00" ipr="none">
+  <front>
+    <title abbrev="AtomCrossPost">Atom Cross-posting Extensions</title>
+
+    <author fullname="Martin Atkins" initials="M." surname="Atkins">
+      <organization>Six Apart Ltd.</organization>
+    </author>
+
+    <date day="30" month="August" year="2009" />
+
+    <abstract>
+      <t>In order to increase content visibility, many publishers are now
+      duplicating their content or a summary thereof on other sites. This
+      document describes an extension to the Atom syndication format for
+      declaring such duplicates such that feed consumers which see both may
+      detect this usage.</t>
+    </abstract>
+
+    <note title="Requirements Language">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+      document are to be interpreted as described in RFC 2119.</t>
+    </note>
+  </front>
+
+  <middle>
+    <section title="Introduction">
+      <t>In order to increase content visibility, many publishers are now
+      duplicating their content or a summary thereof on other sites. This
+      document describes an extension to the Atom syndication format for
+      declaring such duplicates such that feed consumers which see both may
+      detect this usage.</t>
+
+      <t>This specification assumes that there is a single, "primary" version
+      of an entry created by an origin publisher and zero or more secondary
+      duplicates. It is also assumed that the origin publisher is in control
+      of the creation of such duplicates and is therefore in a position to
+      document them as part of the Atom description of the primary version. A
+      mechanism is also provided to mark the secondary duplicates as such, but
+      it is acknowledged that in many cases the publisher of such secondary
+      duplicates does not have the information required to create such a
+      reference.</t>
+    </section>
+
+    <section title="Extension Namespace">
+      <t>The extension elements described in this specification are in the
+      namespace identified by the URI <spanx style="verb">http://purl.org/syndication/cross-posting</spanx>.
+      In this specification, the prefix <spanx style="verb">crosspost:</spanx>
+      is used to represent this namespace, though this is just a notational
+      convention; any valid prefix may be used as described by the XML
+      Namespaces specification. The prefix <spanx style="verb">atom:</spanx>
+      is used to represent the Atom namespace as defined in the Atom 1.0
+      specification.</t>
+
+      <t>TODO: Reference the Atom spec.</t>
+
+      <t>TODO: Reference the namespaces spec.</t>
+
+      <t>TODO: Actually register that namespace URI.</t>
+    </section>
+
+    <section title="The crosspost:target extension element">
+      <t>The <spanx style="verb">crosspost:target</spanx> extension element,
+      when used as a direct child of an <spanx style="verb">atom:entry</spanx>
+      element, indicates that the corresponding entry is a primary version and
+      that the entry described by its attributes is a secondary duplicate.</t>
+
+      <t>The <spanx style="verb">crosspost:target</spanx> element MUST contain
+      zero or one <spanx style="verb">atom:id</spanx> elements whose value
+      matches the <spanx style="verb">atom:id</spanx> element of the entry
+      representing the secondary duplicate as published in this or another
+      feed.</t>
+
+      <t>The <spanx style="verb">crosspost:target</spanx> element MAY contain
+      one or more <spanx style="verb">atom:link</spanx> elements as defined by
+      the Atom specification to give the consumer a hint as to where a
+      representation of the secondary duplicate may be found.</t>
+
+      <t>The <spanx style="verb">crosspost:target</spanx> element MAY contain
+      one <spanx style="verb">atom:source</spanx> element as defined by the
+      Atom specification which describes the feed in which the entry
+      representing the secondary duplicate may be found.</t>
+
+      <t>A single Atom entry may contain zero or more <spanx style="verb">crosspost:target</spanx>
+      elements, each describing a distinct secondary duplicate.</t>
+
+      <t>A feed publisher that has knowingly created one or more secondary
+      duplicates SHOULD reference each one within the entry representing the
+      primary version using the <spanx style="verb">crosspost:target</spanx>
+      element.</t>
+    </section>
+
+    <section title="The crosspost:source extension element">
+      <t>The <spanx style="verb">crosspost:source</spanx> extension element,
+      when used as a direct child of an <spanx style="verb">atom:entry</spanx>
+      element, indicates that the corresponding entry is a secondary duplicate
+      and that the entry described by its attributes is the corresponding
+      primary version. This element SHOULD be used when an entry is published
+      that is known to the feed publisher to be a secondary duplicate.</t>
+
+      <t>The <spanx style="verb">crosspost:source</spanx> element MUST contain
+      zero or one <spanx style="verb">atom:id</spanx> elements whose value
+      matches the <spanx style="verb">atom:id</spanx> element of the entry
+      representing the primary version as published in this or another
+      feed.</t>
+
+      <t>The <spanx style="verb">crosspost:source</spanx> element MAY contain
+      one or more <spanx style="verb">atom:link</spanx> elements as defined by
+      the Atom specification to give the consumer a hint as to where a
+      representation of the primary version may be found.</t>
+
+      <t>The <spanx style="verb">crosspost:source</spanx> element MAY contain
+      one <spanx style="verb">atom:source</spanx> element as defined by the
+      Atom specification which describes the feed in which the entry
+      representing the primary version may be found.</t>
+
+      <t>A single Atom entry may contain zero or one <spanx style="verb">crosspost:source</spanx>
+      elements.</t>
+
+      <t>The absense of this element does not necessarily indicate that an
+      entry is not a secondary duplicate; in many cases a feed publisher will
+      not know whether a given entry is a secondary duplicate and will thus
+      omit this attribute in all cases. How a feed publisher determines that a
+      given entry is a secondary duplicate is not defined by this
+      specification.</t>
+
+      <t>A feed publisher that is both publishing a secondary duplicate and
+      knowingly creating one or more tertiary duplicates (that is, duplicates
+      of a duplicate itself) SHOULD publish both <spanx style="verb">crosspost:target</spanx>
+      and <spanx style="verb">crosspost:source</spanx> elements indicating the
+      ancestry of the content. However, creating tertiary duplicates is NOT
+      RECOMMENDED.</t>
+    </section>
+
+    <section title="Use in RSS">
+      <t>This extension MAY also be used with feeds in RSS format.</t>
+
+      <t>The <spanx style="verb">crosspost:source</spanx> and <spanx
+      style="verb">crosspost:target</spanx> elements MAY be used within RSS
+      feeds as children of the "item" element. When used in this way, their
+      relationship with the "item" element is the same as with the atom:entry
+      element as described above, and their child elements MUST still be the
+      Atom elements defined above, in the Atom XML namespace.</t>
+
+      <t>The RSS "guid" element SHOULD be considered equivalent to the atom:id
+      element when used as a child of the RSS "item" element.</t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>This specification defines attributes that allow content in one
+      resource to make assertions about content in another resource. Consumers
+      MUST NOT consider such assertions to be authoritative without additional
+      information that can be used to verify the validity of the assertion.
+      For example, if a consumer may allow such cross-resource assertions if
+      both resources are known -- by some means outside of the scope of this
+      specification -- to be published by the same author.</t>
+    </section>
+  </middle>
+
+  <back>
+    <section title="Examples">
+      <t>This appendix is non-normative</t>
+
+      <section title="Entry representing Primary Version">
+        <figure>
+          <artwork><![CDATA[<entry>
+    <id>tag:blogtastic.example.com,2009:5a12451543</id>
+    <title>Photos from my Weekend</title>
+    <link href="http://blogtastic.example.com/5a12451543" />
+    <!-- (other standard Atom elements elided for brevity) -->
+    <crosspost:target>
+        <id>tag:jibber.example.org,2005:4523452</id>
+        <source>
+            <link rel="self"
+                  type="application/atom+xml"
+                  href="http://jibber.example.org/geraldine.atom" />
+        </source>
+    </crosspost:target>
+</entry>]]></artwork>
+        </figure>
+      </section>
+
+      <section title="Entry representing a Secondary Duplicate">
+        <figure>
+          <artwork><![CDATA[<entry>
+    <id>tag:jibber.example.org,2005:4523452</id>
+    <title>geraldine: Photos from my Weekend
+               http://sillyurl.example.net/abc123</title>
+    <link href="http://jibber.example.net/statuses/4523452" />
+    <!-- (other standard Atom elements elided for brevity) -->
+    <crosspost:source>
+        <id>tag:blogtastic.example.com,2009:5a12451543</id>
+    </crosspost:source>
+</entry>]]></artwork>
+        </figure>
+      </section>
+    </section>
+  </back>
+</rfc>
